@@ -1,22 +1,85 @@
-<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="google-site-verification" content="e0KUottjXq6w1GSBhJNXhc1WD6q8AiVFT5tuVVUIn6s" /><title>Nine to Free Studio</title><link rel="icon" href="logo.png">
-<style>
-:root{--bg:#060607;--card:#151517;--line:#2a2a2e;--txt:#f2f2f2;--dim:#9a9aa2;--mint:#5fffc8}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font:17px/1.6 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
-.wrap{max-width:760px;margin:0 auto;padding:48px 16px}a{color:var(--mint)}
-.logo{display:flex;align-items:center;gap:14px;margin-bottom:28px}.logo img{width:64px;height:64px;border-radius:50%;border:2px solid var(--mint)}
-h1{font-size:34px;margin:0;letter-spacing:.5px}h1 b{color:var(--mint)}.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 22px;margin:18px 0}
-.dim{color:var(--dim)}footer{margin-top:36px;color:var(--dim);font-size:14px}
-</style></head><body><div class="wrap">
-<div class="logo"><img src="logo.png" alt="Nine to Free logo"><h1>NINE TO <b>FREE</b> STUDIO</h1></div>
-<p>Nine to Free Studio is a private production tool for the <a href="https://www.youtube.com/channel/UCwY-D2KnCFMCeNwc3vZEiUA">Nine to Free</a> YouTube channel, which makes educational videos about money habits, mindset and time.</p>
-<div class="card"><b>What the app does</b>
-<ul><li>It runs only on the channel owner's own computer.</li>
-<li>After the owner approves a script, it creates the video and uploads it to the owner's own YouTube channel (<code>youtube.upload</code>).</li>
-<li>It shows the owner the statistics of their own channel and videos (<code>youtube.readonly</code>).</li></ul>
-It has no other users, and it does not access anyone else's account or data.</div>
-<div class="card" style="display:flex;align-items:center;gap:14px"><svg width="44" height="31" viewBox="0 0 44 31" aria-label="YouTube"><rect width="44" height="31" rx="8" fill="#FF0000"/><path d="M17 9l12 6.5L17 22z" fill="#fff"/></svg><div>This app uses <b>YouTube API Services</b>. See the <a href="https://www.youtube.com/t/terms">YouTube Terms of Service</a> and the <a href="https://policies.google.com/privacy">Google Privacy Policy</a>.</div></div>
-<p style="font-size:20px"><a href="privacy.html"><b>Privacy policy</b></a> · <a href="terms.html"><b>Terms of service</b></a></p>
-<footer>© 2026 Nine to Free</footer>
-</div></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="google-site-verification" content="e0KUottjXq6w1GSBhJNXhc1WD6q8AiVFT5tuVVUIn6s" /><title>Nine to Free Studio</title><link rel="icon" href="logo.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet"><style>*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:#1b1530;font-family:'Press Start 2P',monospace;color:#fff}
+#stage{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+#cv{image-rendering:pixelated;image-rendering:crisp-edges;display:block}
+.hud{position:absolute;top:12px;left:12px;right:12px;display:flex;align-items:center;gap:12px;z-index:5;pointer-events:none}
+.hud .box{pointer-events:auto;display:flex;align-items:center;gap:10px;background:#2a2147;border:4px solid #0d0a18;box-shadow:inset 0 0 0 3px #5b4a9a,0 4px 0 #0d0a18;padding:8px 12px;font-size:12px;line-height:1.4}
+.hud button.box{font:inherit;color:#fff;cursor:pointer}.hud img{width:30px;height:30px;image-rendering:pixelated;border:3px solid #0d0a18;border-radius:4px}.hud b{color:#5fffc8}.hud .r{margin-left:auto}
+.tag{position:absolute;transform:translate(-50%,0);font:inherit;font-size:9px;color:#fff;background:#0d0a18;border:3px solid #fff;padding:4px 6px;white-space:nowrap;cursor:pointer;z-index:3;box-shadow:0 3px 0 #0d0a18;transition:transform .12s}
+.tag:hover,.tag.hov{background:#5fffc8;color:#0d0a18;transform:translate(-50%,-3px)}
+.bub{position:absolute;transform:translate(-50%,-100%);font-size:9px;line-height:1.5;color:#0d0a18;background:#fff;border:3px solid #0d0a18;padding:6px 8px;white-space:nowrap;z-index:4;pointer-events:none;opacity:0;transition:opacity .25s}
+.bub::after{content:"";position:absolute;left:50%;bottom:-9px;margin-left:-6px;border:6px solid transparent;border-top-color:#0d0a18}
+.bub.on{opacity:1;animation:bob 1.6s steps(2) infinite}@keyframes bob{50%{margin-top:-3px}}
+.hint{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);font-size:9px;color:#b9a9ff;z-index:3;animation:blinkh 1.4s steps(2) infinite}@keyframes blinkh{50%{opacity:.4}}
+.missing{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;font-size:11px;line-height:2;padding:20px}
+#scrim{position:fixed;inset:0;background:rgba(13,10,24,.55);opacity:0;pointer-events:none;transition:opacity .25s;z-index:8}#scrim.on{opacity:1;pointer-events:auto}
+#panel{position:fixed;top:0;right:0;bottom:0;width:min(640px,100%);background:#fffaf2;border-left:6px solid #0d0a18;transform:translateX(105%);transition:transform .35s steps(7);z-index:9;display:flex;flex-direction:column}
+#panel.on{transform:none}#panel header{display:flex;align-items:center;gap:12px;padding:10px 14px;background:#2a2147;border-bottom:6px solid #0d0a18;color:#fff}
+#panel header canvas{width:64px;height:80px;image-rendering:pixelated}#panel header b{font-size:13px;display:block;margin-bottom:6px}#panel header span{color:#5fffc8;font-size:9px}
+#panel header button{margin-left:auto;font:inherit;font-size:12px;width:40px;height:40px;background:#ff5d73;color:#fff;border:4px solid #0d0a18;box-shadow:0 4px 0 #0d0a18;cursor:pointer}#panel header button:active{transform:translateY(4px);box-shadow:none}
+#panel iframe{flex:1;border:0;width:100%;background:#fffaf2}
+@media(max-width:700px){.hud .box{font-size:9px}.hint{display:none}}.hud .r{display:none}a.login{pointer-events:auto;margin-left:auto;font:inherit;font-size:12px;text-decoration:none;color:#0d0a18;background:#5fffc8;border:4px solid #0d0a18;box-shadow:0 4px 0 #0d0a18;padding:12px 16px}
+a.login:active{transform:translateY(4px);box-shadow:none}
+.about{position:absolute;left:12px;right:12px;bottom:12px;z-index:5;display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap;background:#2a2147;border:4px solid #0d0a18;box-shadow:inset 0 0 0 3px #5b4a9a;padding:10px 14px;font-family:system-ui,sans-serif;font-size:13px;line-height:1.5;color:#e9e4ff}
+.about a{color:#5fffc8}.about b{font-family:'Press Start 2P',monospace;font-size:10px;color:#fff}.hint{bottom:76px}
+#card{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(13,10,24,.6);z-index:9}#card.on{display:flex}
+#card .in{background:#2a2147;border:6px solid #0d0a18;box-shadow:inset 0 0 0 4px #5b4a9a,0 8px 0 #0d0a18;padding:22px;width:min(380px,92vw);text-align:center}
+#card canvas{width:96px;height:120px;image-rendering:pixelated}#card h2{font-size:14px;margin:10px 0}#card p{font-family:system-ui,sans-serif;font-size:14px;line-height:1.6;color:#e9e4ff}
+#card button{font:inherit;font-size:10px;margin-top:12px;padding:10px 14px;background:#ff5d73;color:#fff;border:4px solid #0d0a18;cursor:pointer}
+@media(max-width:700px){.about{font-size:11px}.hint{display:none}}</style></head><body><div class="hud"><div class="box"><img src="logo.png" alt=""><span>NINE TO <b>FREE</b><br>STUDIO</span></div><div class="box r">⚡ <span id="credits">–</span></div><a class="login" href="https://ylm.tail7df485.ts.net/">LOG IN</a></div><div id="stage"><canvas id="cv" aria-label="Pixel office of the Nine to Free studio crew"></canvas></div><div class="hint">CLICK A CREW MEMBER</div><div class="about"><span><b>NINE TO FREE STUDIO</b> · Our private production tool for the <a href="https://www.youtube.com/channel/UCwY-D2KnCFMCeNwc3vZEiUA">Nine to Free</a> YouTube channel: it writes scripts, makes the videos and uploads them to our own channel. Uses YouTube API Services.</span><span><a href="privacy.html">Privacy policy</a> · <a href="terms.html">Terms of service</a></span></div><div id="card" onclick="if(event.target===this)this.classList.remove('on')"><div class="in"><canvas id="cav" width="64" height="80"></canvas><h2 id="cname"></h2><p id="crole"></p><button onclick="document.getElementById('card').classList.remove('on')">CLOSE</button></div></div><script>const ROLES={"writer": "Script writer: writes 10 scripts every 2 days", "editor": "Editor: turns approved scripts into videos", "analyst": "Analyst: keeps an eye on the channel numbers", "uploader": "Uploader: publishes the videos on YouTube", "ideas": "Ideas: collects new video ideas", "archive": "Archivist: keeps every video we made"};window.OFFICE_ASSETS='office/';
+window.OFFICE_STATIC=t=>{const k=Math.floor(t/7)%4,B=[{writer:'Writing a script...',ideas:'New idea!'},{editor:'Rendering 62%',analyst:'Checking the stats'},{uploader:'Video is live!',writer:'Script ready!'},{archive:'All filed away',ideas:'5 ideas!'}][k],crew={};
+  for(const id of ['writer','editor','analyst','uploader','ideas','archive'])crew[id]={bubble:B[id]||'',state:(id==='writer'||id==='editor')?'busy':(k===2&&id==='uploader'?'cheer':'')};return {crew}};
+window.OFFICE_OPEN=(c,im)=>{const cv=document.getElementById('cav'),g=cv.getContext('2d');g.imageSmoothingEnabled=false;g.clearRect(0,0,64,80);g.drawImage(im,0,0,64,80,0,0,64,80);
+  document.getElementById('cname').textContent=c.name;document.getElementById('crole').textContent=ROLES[c.id]||'';document.getElementById('card').classList.add('on')};
+
+const CREW=[{"id": "writer", "name": "Nabil", "role": "Scriptschrijver", "panel": "/scripts", "walk": null}, {"id": "editor", "name": "Saad", "role": "Editor \u00b7 video maken", "panel": "/production", "walk": null}, {"id": "analyst", "name": "Jihad", "role": "Analist \u00b7 kanaal", "panel": "/channel", "walk": null}, {"id": "uploader", "name": "Yassine", "role": "Uploader \u00b7 YouTube", "panel": "/uploads", "walk": null}, {"id": "ideas", "name": "Mama", "role": "Idee\u00ebn", "panel": "/ideas", "walk": [[0.95, 2.0], [0.95, 3.3]]}, {"id": "archive", "name": "Papa", "role": "Archivaris", "panel": "/archive", "walk": [[5.8, 2.0], [5.8, 3.5]]}], META={"size": [640, 480], "crew": {"writer": {"anim": "Sit", "row": 3, "x": 299.2, "y": 218.0, "i": 1.7, "j": 1.55}, "editor": {"anim": "Sit", "row": 3, "x": 209.6, "y": 262.8, "i": 4.5, "j": 1.55}, "analyst": {"anim": "Sit", "row": 2, "x": 395.20000000000005, "y": 261.2, "i": 1.55, "j": 4.4}, "uploader": {"anim": "Sit", "row": 2, "x": 481.6, "y": 304.4, "i": 1.55, "j": 7.1}, "ideas": {"anim": "Idle", "row": 2, "x": 356.8, "y": 222.8, "i": 0.95, "j": 2.6}, "archive": {"anim": "Idle", "row": 1, "x": 201.60000000000002, "y": 300.4, "i": 5.8, "j": 2.6}}, "objects": [{"f": "obj_0", "x": 290, "y": 135, "d": 0.8}, {"f": "obj_1", "x": 223, "y": 124, "d": 2.2}, {"f": "obj_2", "x": 252, "y": 126, "d": 2.21}, {"f": "obj_3", "x": 275, "y": 149, "d": 2.22}, {"f": "obj_4", "x": 251, "y": 164, "d": 2.22}, {"f": "obj_5", "x": 235, "y": 154, "d": 2.22}, {"f": "obj_6", "x": 226, "y": 189, "d": 3.1}, {"f": "obj_7", "x": 278, "y": 160, "d": 3.27}, {"f": "obj_8", "x": 386, "y": 167, "d": 4.9}, {"f": "obj_9", "x": 409, "y": 169, "d": 4.91}, {"f": "obj_10", "x": 384, "y": 171, "d": 4.92}, {"f": "obj_11", "x": 428, "y": 216, "d": 4.92}, {"f": "obj_12", "x": 134, "y": 169, "d": 5.0}, {"f": "obj_13", "x": 163, "y": 171, "d": 5.01}, {"f": "obj_14", "x": 179, "y": 195, "d": 5.02}, {"f": "obj_15", "x": 154, "y": 216, "d": 5.02}, {"f": "obj_16", "x": 374, "y": 203, "d": 5.97}, {"f": "obj_17", "x": 189, "y": 205, "d": 6.07}, {"f": "obj_18", "x": 64, "y": 169, "d": 7.4}, {"f": "obj_19", "x": 473, "y": 211, "d": 7.6}, {"f": "obj_20", "x": 496, "y": 212, "d": 7.61}, {"f": "obj_21", "x": 481, "y": 231, "d": 7.62}, {"f": "obj_22", "x": 512, "y": 256, "d": 7.62}, {"f": "obj_23", "x": 530, "y": 264, "d": 8.5}, {"f": "obj_24", "x": 461, "y": 246, "d": 8.67}, {"f": "obj_25", "x": 533, "y": 233, "d": 8.9}, {"f": "obj_26", "x": 206, "y": 313, "d": 11.3}, {"f": "obj_27", "x": 181, "y": 325, "d": 11.9}, {"f": "obj_28", "x": 401, "y": 300, "d": 12.8}, {"f": "obj_29", "x": 416, "y": 305, "d": 12.81}, {"f": "obj_30", "x": 225, "y": 336, "d": 13.0}, {"f": "obj_31", "x": 250, "y": 315, "d": 13.8}, {"f": "obj_32", "x": 393, "y": 354, "d": 14.0}, {"f": "obj_33", "x": 357, "y": 364, "d": 15.1}, {"f": "obj_34", "x": 317, "y": 366, "d": 16.0}], "ox": 304, "oy": 150, "anims": {"lava": {"x": 128, "y": 161, "w": 64, "h": 64, "n": 24, "fps": 8, "d": 5.43}, "clock": {"x": 294, "y": 66, "w": 64, "h": 64, "n": 12, "fps": 1, "d": 0.78}}, "robot": {"path": [[3.2, 3.6], [5.6, 3.6], [5.6, 6.4], [3.2, 6.4]]}, "v": 1793630841}, cv=document.getElementById('cv'), g=cv.getContext('2d'), $=s=>document.querySelector(s);
+const [LW,LH]=META.size, iso=(i,j)=>[META.ox+(j-i)*32, META.oy+(i+j)*16+16];
+const load=src=>new Promise(r=>{const im=new Image();im.onload=()=>r(im);im.src=(window.OFFICE_ASSETS||'/office-assets/')+src+'?v='+META.v});
+let S={crew:{},screens:{}}, scale=2, hover=null, T=0, IM={}, PEOPLE=[];
+const STARS=[...Array(110)].map(()=>[Math.random(),Math.random(),Math.random()*6]);
+// walkers: along their path, facing the direction they move
+function walkPos(c,t){const [a,b]=c.walk, L=Math.hypot(b[0]-a[0],b[1]-a[1]), per=L/0.55, cyc=per*2+6, u=(t+c.id.length*3)%cyc;
+  if(u<per){const k=u/per;return {i:a[0]+(b[0]-a[0])*k,j:a[1]+(b[1]-a[1])*k,anim:'Walk',row:dirRow(b[0]-a[0],b[1]-a[1])}}
+  if(u<per+3)return {i:b[0],j:b[1],anim:'Idle',row:dirRow(a[0]-b[0],a[1]-b[1])};
+  if(u<per*2+3){const k=(u-per-3)/per;return {i:b[0]+(a[0]-b[0])*k,j:b[1]+(a[1]-b[1])*k,anim:'Walk',row:dirRow(a[0]-b[0],a[1]-b[1])}}
+  return {i:a[0],j:a[1],anim:'Idle',row:dirRow(b[0]-a[0],b[1]-a[1])}}
+function dirRow(di,dj){return Math.abs(di)>=Math.abs(dj)?(di>0?0:2):(dj>0?1:3)}   // 0 SW, 1 SE, 2 NE, 3 NW
+function robot(t){const P=META.robot.path,seg=P.length,per=4,u=(t*0.25)%seg,k=Math.floor(u),f=u-k,a=P[k],b=P[(k+1)%seg];return [a[0]+(b[0]-a[0])*f,a[1]+(b[1]-a[1])*f]}
+function frame(ts){T=ts/1000;g.setTransform(scale,0,0,scale,0,0);g.imageSmoothingEnabled=false;
+  g.fillStyle='#1b1530';g.fillRect(0,0,LW,LH);
+  STARS.forEach(([x,y,p])=>{const on=Math.sin(T*2+p)>.2;g.fillStyle=on?'#d9ccff':'#4f437f';g.fillRect(Math.round(x*LW),Math.round(y*LH),1,1)});
+  g.drawImage(IM.bg,0,0);
+  const list=META.objects.map(o=>({d:o.d,f:()=>g.drawImage(IM[o.f],o.x,o.y)}));        // furniture, depth-sorted with the people
+  for(const [n,a] of Object.entries(META.anims))list.push({d:a.d,f:()=>{const fr=Math.floor(T*a.fps)%a.n;g.drawImage(IM['anim_'+n],fr*a.w,0,a.w,a.h,a.x,a.y,a.w,a.h)}});
+  const [ri,rj]=robot(T),[rx,ry]=iso(ri,rj);list.push({d:ri+rj,f:()=>g.drawImage(IM.anim_robot,(Math.floor(T*8)%16)*64,0,64,64,Math.round(rx-32),Math.round(ry-40),64,64)});
+  PEOPLE=[];
+  CREW.forEach(c=>{const m=META.crew[c.id],st=(S.crew[c.id]||{}).state;let p={i:m.i,j:m.j,anim:m.anim,row:m.row};
+    if(c.walk&&!st)p=walkPos(c,T); const [x,y]=iso(p.i,p.j);
+    let fr=Math.floor(T*(p.anim==='Walk'?10:st==='busy'?12:6))%8, dy=0;
+    if(st==='cheer'){dy=-Math.round(Math.abs(Math.sin(T*8))*10)}
+    PEOPLE.push({id:c.id,x,y:y+dy});
+    list.push({d:p.i+p.j,f:()=>{const sh=IM['crew_'+c.id+'_'+p.anim];
+      if(hover===c.id){g.globalAlpha=.9;for(const [ox,oy] of [[-1,0],[1,0],[0,-1],[0,1]]){g.filter='brightness(0) invert(1)';g.drawImage(sh,fr*64,p.row*80,64,80,Math.round(x-32+ox),Math.round(y-72+dy+oy),64,80)}g.filter='none';g.globalAlpha=1}
+      g.drawImage(sh,fr*64,p.row*80,64,80,Math.round(x-32),Math.round(y-72+dy),64,80);
+      if(st==='busy'){for(let k=0;k<3;k++){const q=(T*1.4+k/3)%1;g.globalAlpha=1-q;g.fillStyle=['#5fffc8','#ffffff','#ffd23f'][k];g.fillRect(Math.round(x-8+k*7),Math.round(y-74-q*16),2,2)}g.globalAlpha=1}}})});
+  list.sort((a,b)=>a.d-b.d).forEach(o=>o.f());
+  place();requestAnimationFrame(frame)}
+function fit(){scale=Math.max(1,Math.min(innerWidth/LW,(innerHeight-20)/LH));scale=scale>=2?Math.floor(scale*4)/4:scale;cv.width=Math.round(LW*scale);cv.height=Math.round(LH*scale)}
+addEventListener('resize',fit);fit();
+const tags={},bubs={};
+CREW.forEach(c=>{const t=document.createElement('button');t.className='tag';t.textContent=c.name;t.onclick=()=>openPanel(c.id);t.onmouseenter=()=>hover=c.id;t.onmouseleave=()=>hover=null;document.body.appendChild(t);tags[c.id]=t;
+  const b=document.createElement('div');b.className='bub';document.body.appendChild(b);bubs[c.id]=b});
+function place(){const r=cv.getBoundingClientRect();PEOPLE.forEach(p=>{const x=r.left+p.x*scale,y=r.top+p.y*scale;tags[p.id].style.left=x+'px';tags[p.id].style.top=(y+6*scale)+'px';bubs[p.id].style.left=x+'px';bubs[p.id].style.top=(y-(60+({ideas:22,uploader:8}[p.id]||0))*scale)+'px';tags[p.id].classList.toggle('hov',hover===p.id)})}
+function who(e){const r=cv.getBoundingClientRect(),mx=(e.clientX-r.left)/scale,my=(e.clientY-r.top)/scale;let best=null,bd=1e9;PEOPLE.forEach(p=>{if(mx>p.x-14&&mx<p.x+14&&my>p.y-58&&my<p.y+4){const d=Math.abs(my-p.y);if(d<bd){bd=d;best=p.id}}});return best}
+cv.addEventListener('mousemove',e=>{hover=who(e);cv.style.cursor=hover?'pointer':'default'});cv.addEventListener('mouseleave',()=>hover=null);cv.addEventListener('click',e=>{const id=who(e);if(id)openPanel(id)});
+const panel=$('#panel'),scrim=$('#scrim'),frameEl=$('#panel iframe'),ag=$('#pav')?$('#pav').getContext('2d'):null;
+function openPanel(id){const c=CREW.find(x=>x.id===id),m=META.crew[id];if(window.OFFICE_OPEN)return window.OFFICE_OPEN(c,IM['crew_'+id+'_Idle']);$('#pname').textContent=c.name;$('#prole').textContent=c.role;ag.clearRect(0,0,64,80);ag.imageSmoothingEnabled=false;ag.drawImage(IM['crew_'+id+'_Idle'],0,0,64,80,0,0,64,80);
+  frameEl.src=c.panel;panel.classList.add('on');scrim.classList.add('on')}
+function closePanel(){panel.classList.remove('on');scrim.classList.remove('on');setTimeout(()=>{if(!panel.classList.contains('on'))frameEl.src='about:blank'},400);tick()}
+if(scrim)scrim.onclick=closePanel;if($('#pclose'))$('#pclose').onclick=closePanel;addEventListener('keydown',e=>{if(e.key==='Escape')closePanel()});
+window.openSec=()=>{$('#pname').textContent='Beveiliging';$('#prole').textContent='Inlogs en meldingen';if(ag)ag.clearRect(0,0,64,80);frameEl.src='/security';panel.classList.add('on');scrim.classList.add('on')};
+async function tick(){try{let r=null;if(!window.OFFICE_STATIC){r=await fetch('/api/office',{cache:'no-store'});if(r.status===401){location.href='/login';return}}S=window.OFFICE_STATIC?window.OFFICE_STATIC(T):await r.json();
+  for(const c of CREW){const v=S.crew[c.id]||{},b=bubs[c.id];if(v.bubble){if(b.textContent!==v.bubble)b.textContent=v.bubble;b.classList.add('on')}else b.classList.remove('on')}
+  const ce=$('#credits');if(ce)ce.textContent=S.credits!=null?S.credits.toLocaleString('nl-NL'):'–'}catch(e){}}
+(async()=>{const names=['bg','anim_robot',...Object.keys(META.anims).map(n=>'anim_'+n),...META.objects.map(o=>o.f)];CREW.forEach(c=>['Idle','Walk','Sit'].forEach(a=>names.push('crew_'+c.id+'_'+a)));
+  const ims=await Promise.all(names.map(n=>load(n+'.png')));names.forEach((n,k)=>IM[n]=ims[k]);await document.fonts.ready;tick();setInterval(tick,3000);requestAnimationFrame(frame)})();
+</script></body></html>
